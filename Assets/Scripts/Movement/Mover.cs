@@ -1,11 +1,11 @@
-using RPG.Combat;
+
 using RPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         NavMeshAgent navMeshAgent;
         Animator animator;
@@ -31,7 +31,7 @@ namespace RPG.Movement
         public void StarMoveAction(Vector3 destination)
         {
             GetComponent<ActionScheduler>().StartAction(this);
-            GetComponent<Fighter>().Stop();
+           
             MoveTo(destination);
         }
 
@@ -40,10 +40,12 @@ namespace RPG.Movement
             navMeshAgent.destination = destination;
             navMeshAgent.isStopped = false;
         }
-        public void Stop()
+        public void Cancel()
         {
             navMeshAgent.isStopped = true;
         }
+
+   
     }
 }
  
