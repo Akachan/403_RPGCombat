@@ -11,6 +11,8 @@ namespace RPG.Combat
         [SerializeField] private float weaponRange = 2f;
 
         Transform _target;
+        private static readonly int Attack1 = Animator.StringToHash("attack");
+
         private void Update()
         {
             if (_target == null) return; 
@@ -23,9 +25,14 @@ namespace RPG.Combat
             else
             {
                 GetComponent<Mover>().Cancel();
-                
+                AttackBehaviour();
             }
 
+        }
+
+        private void AttackBehaviour()
+        {
+            GetComponent<Animator>().SetTrigger(Attack1);
         }
 
         private bool GetIsInRange()
@@ -42,6 +49,12 @@ namespace RPG.Combat
         public void Cancel()
         {
             _target = null;
+        }
+        
+        //Animation Event
+        private void Hit()
+        {
+            
         }
 
 
