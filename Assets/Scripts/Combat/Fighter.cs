@@ -9,18 +9,19 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour, IAction
     {
         [SerializeField] private float weaponRange = 2f;
+        [SerializeField] private float timeBetweenAttacks = 1f;
 
-        Transform _target;
+        private Transform _target;
+        private float timeSinceLastAttack = 0f;
         private static readonly int Attack1 = Animator.StringToHash("attack");
 
         private void Update()
         {
+            timeSinceLastAttack += Time.deltaTime;
             if (_target == null) return; 
             if (!GetIsInRange())
             {
                 GetComponent<Mover>().MoveTo(_target.position);
-                
-
             }
             else
             {
@@ -32,7 +33,9 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
+            if(timeSinceLastAttack< timeBetweenAttacks){return;}
             GetComponent<Animator>().SetTrigger(Attack1);
+            timeSinceLastAttack = 0f;
         }
 
         private bool GetIsInRange()
