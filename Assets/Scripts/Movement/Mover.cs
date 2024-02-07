@@ -1,4 +1,5 @@
 using RPG.Combat;
+using RPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -29,7 +30,8 @@ namespace RPG.Movement
         }
         public void StarMoveAction(Vector3 destination)
         {
-            GetComponent<Fighter>().Cancel();
+            GetComponent<ActionScheduler>().StartAction(this);
+            GetComponent<Fighter>().Stop();
             MoveTo(destination);
         }
 
