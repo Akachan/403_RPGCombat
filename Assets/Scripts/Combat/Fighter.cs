@@ -20,8 +20,8 @@ namespace RPG.Combat
         private void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
-            if (_target == null) return; 
-            if (_target.IsDead){return;}
+            if(_target == null) {return;}
+            if(_target.IsDead) {return;}
             
             if (!GetIsInRange())
             {
@@ -40,9 +40,11 @@ namespace RPG.Combat
             
             
             if(timeSinceLastAttack< timeBetweenAttacks){return;}
+            
             //This will trigger the HIT() event
             transform.LookAt(_target.transform, Vector3.up);
             GetComponent<Animator>().SetTrigger(Attack1);
+            
             timeSinceLastAttack = 0f;
             
            
@@ -60,6 +62,13 @@ namespace RPG.Combat
             return Vector3.Distance(transform.position, _target.transform.position) <= weaponRange;
         }
 
+        public bool CanAttack(CombatTarget combatTarget)
+        {
+            if (combatTarget == null) { return false; }
+
+            Health currentTarget = GetComponent<Health>();
+            return currentTarget != null && !currentTarget.IsDead;
+        }
         public void Attack(CombatTarget combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
@@ -73,8 +82,10 @@ namespace RPG.Combat
             GetComponent<Animator>().SetTrigger(StopAttack);
             _target = null;
         }
-        
-   
+
+
+
+    
 
 
     }
