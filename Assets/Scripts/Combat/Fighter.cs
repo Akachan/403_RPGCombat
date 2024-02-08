@@ -1,3 +1,4 @@
+using System;
 using RPG.Movement;
 using UnityEngine;
 using RPG.Core;
@@ -13,13 +14,19 @@ namespace RPG.Combat
         [SerializeField] private float weaponDamage = 5f;
 
         private Health _target;
-        private float timeSinceLastAttack = 0f;
+        private Animator _animator;
+        private float _timeSinceLastAttack = Mathf.Infinity;
         private static readonly int Attack1 = Animator.StringToHash("attack");
         private static readonly int StopAttack = Animator.StringToHash("stopAttack");
 
+        private void Awake()
+        {
+            _animator = GetComponent<Animator>();
+        }
+
         private void Update()
         {
-            timeSinceLastAttack += Time.deltaTime;
+            _timeSinceLastAttack += Time.deltaTime;
             if(_target == null) {return;}
             if(_target.IsDead) {return;}
             
@@ -36,19 +43,19 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
-            if(timeSinceLastAttack< timeBetweenAttacks){return;}
+            if(_timeSinceLastAttack< timeBetweenAttacks){return;}
             
             //This will trigger the HIT() event
             transform.LookAt(_target.transform, Vector3.up);
             TriggerAttackAnimation();
 
-            timeSinceLastAttack = 0f;
+            _timeSinceLastAttack = 0f;
         }
 
         private void TriggerAttackAnimation()
         {
-            GetComponent<Animator>().ResetTrigger(StopAttack);
-            GetComponent<Animator>().SetTrigger(Attack1);
+            _animator.ResetTrigger(StopAttack);
+            _animator.SetTrigger(Attack1);
         }
 
         //Animation Event
@@ -84,8 +91,8 @@ namespace RPG.Combat
 
         private void StopAttackAnimation()
         {
-            GetComponent<Animator>().ResetTrigger(Attack1);
-            GetComponent<Animator>().SetTrigger(StopAttack);
+            _animator.ResetTrigger(Attack1);
+            _animator.SetTrigger(StopAttack);
         }
     }
 

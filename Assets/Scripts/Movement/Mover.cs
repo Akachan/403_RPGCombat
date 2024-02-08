@@ -7,26 +7,29 @@ namespace RPG.Movement
 {
     public class Mover : MonoBehaviour, IAction
     {
-        NavMeshAgent navMeshAgent;
-        Animator animator;
+        private NavMeshAgent _navMeshAgent;
+        private Animator _animator;
+        private Health _health;
     
         void Start()
         {
-            navMeshAgent = GetComponent<NavMeshAgent>();
-            animator = GetComponent<Animator>();
-            
+            _navMeshAgent = GetComponent<NavMeshAgent>();
+            _animator = GetComponent<Animator>();
+            _health = GetComponent<Health>();
+
         }
 
 
         void Update()
         {
+            _navMeshAgent.enabled = !_health.IsDead;
             UpdateAnimator();
         }
 
         private void UpdateAnimator()
         {
-            Vector3 localVelocity = transform.InverseTransformDirection(navMeshAgent.velocity);
-            animator.SetFloat("fowardSpeed", localVelocity.z);
+            Vector3 localVelocity = transform.InverseTransformDirection(_navMeshAgent.velocity);
+            _animator.SetFloat("fowardSpeed", localVelocity.z);
         }
         public void StarMoveAction(Vector3 destination)
         {
@@ -37,12 +40,12 @@ namespace RPG.Movement
 
         public void MoveTo(Vector3 destination)
         {
-            navMeshAgent.destination = destination;
-            navMeshAgent.isStopped = false;
+            _navMeshAgent.destination = destination;
+            _navMeshAgent.isStopped = false;
         }
         public void Cancel()
         {
-            navMeshAgent.isStopped = true;
+            _navMeshAgent.isStopped = true;
         }
 
    
