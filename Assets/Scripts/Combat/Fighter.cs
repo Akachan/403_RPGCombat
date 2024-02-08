@@ -44,8 +44,10 @@ namespace RPG.Combat
         //Animation Event
         private void Hit()
         {
+            if(_target == null) {return;}
             Health targetHealth = _target.GetComponent<Health>();
             targetHealth.TakeDamage(weaponDamage);
+            
         }
 
         private bool GetIsInRange()
