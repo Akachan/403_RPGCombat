@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using RPG.Combat;
 using RPG.Core;
 using UnityEngine;
@@ -39,6 +40,10 @@ namespace RPG.Control
           return distance < chaseDistance;
         }
 
-
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, chaseDistance);
+        }
     }
 }
