@@ -41,6 +41,7 @@ namespace RPG.Combat
             
             if(timeSinceLastAttack< timeBetweenAttacks){return;}
             //This will trigger the HIT() event
+            transform.LookAt(_target.transform, Vector3.up);
             GetComponent<Animator>().SetTrigger(Attack1);
             timeSinceLastAttack = 0f;
             
@@ -63,6 +64,8 @@ namespace RPG.Combat
         {
             GetComponent<ActionScheduler>().StartAction(this);
             _target = combatTarget.GetComponent<Health>();
+            
+            
         }
 
         public void Cancel()
