@@ -10,6 +10,7 @@ namespace RPG.Combat
         private bool isDead;
         private static readonly int Death = Animator.StringToHash("death");
 
+        public bool IsDead => isDead;
         private void Start()
         {
             _currentHealth = health;

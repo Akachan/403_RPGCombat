@@ -12,17 +12,20 @@ namespace RPG.Combat
         [SerializeField] private float timeBetweenAttacks = 1f;
         [SerializeField] private float weaponDamage = 5f;
 
-        private Transform _target;
+        private Health _target;
         private float timeSinceLastAttack = 0f;
         private static readonly int Attack1 = Animator.StringToHash("attack");
+        private static readonly int StopAttack = Animator.StringToHash("stopAttack");
 
         private void Update()
         {
             timeSinceLastAttack += Time.deltaTime;
             if (_target == null) return; 
+            if (_target.IsDead){return;}
+            
             if (!GetIsInRange())
             {
-                GetComponent<Mover>().MoveTo(_target.position);
+                GetComponent<Mover>().MoveTo(_target.transform.position);
             }
             else
             {
@@ -34,6 +37,8 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
+            
+            
             if(timeSinceLastAttack< timeBetweenAttacks){return;}
             //This will trigger the HIT() event
             GetComponent<Animator>().SetTrigger(Attack1);
@@ -45,24 +50,24 @@ namespace RPG.Combat
         private void Hit()
         {
             if(_target == null) {return;}
-            Health targetHealth = _target.GetComponent<Health>();
-            targetHealth.TakeDamage(weaponDamage);
+            _target.TakeDamage(weaponDamage);
             
         }
 
         private bool GetIsInRange()
         {
-            return Vector3.Distance(transform.position, _target.position) <= weaponRange;
+            return Vector3.Distance(transform.position, _target.transform.position) <= weaponRange;
         }
 
         public void Attack(CombatTarget combatTarget)
         {
             GetComponent<ActionScheduler>().StartAction(this);
-            _target = combatTarget.transform;
+            _target = combatTarget.GetComponent<Health>();
         }
 
         public void Cancel()
         {
+            GetComponent<Animator>().SetTrigger(StopAttack);
             _target = null;
         }
         
