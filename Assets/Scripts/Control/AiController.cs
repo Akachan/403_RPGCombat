@@ -11,13 +11,15 @@ namespace RPG.Control
     public class AiController: MonoBehaviour
     {
         [SerializeField] private float chaseDistance = 5f;
-        [SerializeField] private float suspicionTime = 3f;
+        [SerializeField] private float suspicionTime = 10f;
+        [SerializeField] private float waypointDwellTime = 3f;
         [SerializeField] private PatrolPath patrolPath;
         [SerializeField] private float waypointTolerance = 1f;      
         
         private Vector3 _guardPosition;
         private int _currentWaypointIndex= 0;
         private float _timeSinceLastSawPlayer = Mathf.Infinity;
+        private float _timeSinceArriveToWaypoint = Mathf.Infinity;
         
         private ActionScheduler _actionScheduler;
         private GameObject _target;
@@ -46,8 +48,6 @@ namespace RPG.Control
             
             if (InAttackRange()  && _fighter.CanAttack(_target))
             {
-                _timeSinceLastSawPlayer = 0f;
-                
                 AttackBehaviour();
             }
             else if (_timeSinceLastSawPlayer < suspicionTime)
@@ -59,23 +59,33 @@ namespace RPG.Control
                 PatrolBehaviour();
             } 
 
+            UpdateTimers();
+        }
+
+        private void UpdateTimers()
+        {
             _timeSinceLastSawPlayer += Time.deltaTime;
+            _timeSinceArriveToWaypoint += Time.deltaTime;
         }
 
         private void PatrolBehaviour()
         {
-            Vector3 nextPosition = _guardPosition;
+            var nextPosition = _guardPosition;
 
             if (patrolPath != null)
             {
                 if (AtWaypoint())
                 {
+                    _timeSinceArriveToWaypoint = 0f;
                     CycleWaypoint();
                 }
 
                 nextPosition = GetCurrentWayPoint();
             }
-            _mover.StarMoveAction(nextPosition);
+            if (_timeSinceArriveToWaypoint > waypointDwellTime)
+            {
+                _mover.StarMoveAction(nextPosition);
+            }
         }
 
         private Vector3 GetCurrentWayPoint()
@@ -103,6 +113,7 @@ namespace RPG.Control
 
         private void AttackBehaviour()
         {
+            _timeSinceLastSawPlayer = 0f;
             _fighter.Attack(_target.gameObject);
         }
 
