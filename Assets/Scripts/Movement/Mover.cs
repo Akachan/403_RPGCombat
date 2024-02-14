@@ -7,12 +7,15 @@ namespace RPG.Movement
 {
     public class Mover : MonoBehaviour, IAction
     {
+        private ActionScheduler _actionScheduler;
         private NavMeshAgent _navMeshAgent;
         private Animator _animator;
         private Health _health;
-    
+        private static readonly int ForwardSpeed = Animator.StringToHash("forwardSpeed");
+
         void Start()
         {
+            _actionScheduler = GetComponent<ActionScheduler>();
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _animator = GetComponent<Animator>();
             _health = GetComponent<Health>();
@@ -29,11 +32,11 @@ namespace RPG.Movement
         private void UpdateAnimator()
         {
             Vector3 localVelocity = transform.InverseTransformDirection(_navMeshAgent.velocity);
-            _animator.SetFloat("fowardSpeed", localVelocity.z);
+            _animator.SetFloat(ForwardSpeed, localVelocity.z);
         }
         public void StarMoveAction(Vector3 destination)
         {
-            GetComponent<ActionScheduler>().StartAction(this);
+            _actionScheduler.StartAction(this);
            
             MoveTo(destination);
         }

@@ -13,6 +13,7 @@ namespace RPG.Combat
         [SerializeField] private float timeBetweenAttacks = 1f;
         [SerializeField] private float weaponDamage = 5f;
 
+        private ActionScheduler _actionScheduler;
         private Health _target;
         private Animator _animator;
         private float _timeSinceLastAttack = Mathf.Infinity;
@@ -22,6 +23,7 @@ namespace RPG.Combat
         private void Awake()
         {
             _animator = GetComponent<Animator>();
+            _actionScheduler = GetComponent<ActionScheduler>();
         }
 
         private void Update()
@@ -79,7 +81,7 @@ namespace RPG.Combat
         }
         public void Attack(GameObject combatTarget)
         {
-            GetComponent<ActionScheduler>().StartAction(this);
+            _actionScheduler.StartAction(this);
             _target = combatTarget.GetComponent<Health>();
         }
 
