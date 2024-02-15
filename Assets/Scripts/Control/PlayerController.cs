@@ -56,7 +56,7 @@ namespace RPG.Control
                 if (Input.GetMouseButton(0))
                 {
                     
-                    GetComponent<Mover>().StarMoveAction(hit.point);
+                    GetComponent<Mover>().StarMoveAction(hit.point,1f);
                 }
                 return true;     
             }
