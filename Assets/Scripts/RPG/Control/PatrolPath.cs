@@ -6,7 +6,7 @@ namespace RPG.Control
     {
         [SerializeField] private float waypointGizmoRadius = 0.5f;
 
-        private int _currentWaypointIndex = 0;
+        //private int _currentWaypointIndex = 0;
 
         private void Start()
         {
