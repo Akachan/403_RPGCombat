@@ -764,6 +764,7 @@ GameObject:
   - component: {fileID: 260943097}
   - component: {fileID: 260943096}
   - component: {fileID: 260943098}
+  - component: {fileID: 260943099}
   m_Layer: 2
   m_Name: IntroSequence
   m_TagString: Untagged
@@ -872,6 +873,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &260943099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260943092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e646fbec7469481ab18bff940f363835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &320965175 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 489180, guid: 626f1b816ba1ee64a9f7cea6ceb529cd, type: 3}
@@ -3470,7 +3483,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528562175}
-  m_LocalRotation: {x: -0.012165267, y: 0.7822564, z: -0.015283632, w: -0.6226502}
+  m_LocalRotation: {x: 0.012165266, y: -0.78225654, z: 0.015283636, w: 0.62265015}
   m_LocalPosition: {x: -34.09146, y: 4.3891172, z: -37.276627}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
