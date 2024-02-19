@@ -9,8 +9,14 @@ namespace RPG.SceneManagement
 {
     public class Portal : MonoBehaviour
     {
-        [SerializeField] private int sceneToLoad;
+        public enum DestinationIdentifier
+        {
+         A, B, C, D   
+        }
+        
+        [SerializeField] private int sceneToLoad =-1;
         [field: SerializeField] public Transform SpawnPoint { get; private set; }
+        [field: SerializeField] public DestinationIdentifier destination;
  
         private void OnTriggerEnter(Collider other)
         {
@@ -21,10 +27,15 @@ namespace RPG.SceneManagement
 
         private IEnumerator Transition()
         {
+            if (sceneToLoad < 0)
+            {
+                Debug.LogError("Scene to Load not set yet");
+                yield break;
+            }
             DontDestroyOnLoad(gameObject);
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
             
-            var otherPortal = GetOtherPortal();
+            var otherPortal = GetOtherPortal(); 
             UpdatePlayer(otherPortal);
             
             Destroy(gameObject);
@@ -45,12 +56,14 @@ namespace RPG.SceneManagement
             var portals = FindObjectsOfType<Portal>();
             foreach (var portal in portals)
             {
-                if (portal != this)
+                if (portal == this) {continue;}
+                if (portal.destination == destination)
                 {
+                    print($"El sale del portal {destination} y va al portal {portal.destination}");
                     return portal;
                 }
             }
-
+            print("no se encontró portal igual al destino");
             return null;
             
         }
