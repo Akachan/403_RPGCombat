@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using RPG.Control;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -21,7 +20,14 @@ namespace RPG.SceneManagement
         [Header("Fader")] [SerializeField] private float fadeOutTime = 0.5f;
         [SerializeField] private float fadeWaitTime = 1f;
         [SerializeField] private float fadeInTime = 0.5f;
- 
+
+        
+
+        private void Awake()
+        {
+     
+        }
+
         private void OnTriggerEnter(Collider other)
         {
             if(!other.CompareTag("Player")) {return;}
@@ -36,29 +42,28 @@ namespace RPG.SceneManagement
                 Debug.LogError("Scene to Load not set yet");
                 yield break;
             }
-
             
             DontDestroyOnLoad(gameObject);
             
             Fader fader = FindObjectOfType<Fader>();
             
-            print("empezo el fade out");
             yield return fader.FadeOut(fadeOutTime);
-            print("termino  el fade out");
             
-            
+            SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
+            savingWrapper.Save();
             
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            
+            savingWrapper.Load();
             
             var otherPortal = GetOtherPortal(); 
             UpdatePlayer(otherPortal);
             
+            savingWrapper.Save();
+            
             yield return new WaitForSeconds(fadeWaitTime);
-            
-            print("empezo el fade in");
             yield return fader.FadeIn(fadeInTime);
-            print("termino  el fade in");
-            
+
             Destroy(gameObject);
         }
 

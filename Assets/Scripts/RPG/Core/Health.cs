@@ -7,14 +7,14 @@ namespace RPG.Core
     public class Health: MonoBehaviour, ISaveable    
     {
         [SerializeField] private float health = 100f;
-        private float _currentHealth;
+        private float _currentHealth = 100f;
         private bool _isDead;
         private static readonly int Death = Animator.StringToHash("death");
 
         public bool IsDead => _isDead;
         private void Start()
         {
-            _currentHealth = health;
+            //_currentHealth = health;
         }
 
         public void TakeDamage(float damage)

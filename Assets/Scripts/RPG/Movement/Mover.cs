@@ -15,7 +15,7 @@ namespace RPG.Movement
         private Health _health;
         private static readonly int ForwardSpeed = Animator.StringToHash("forwardSpeed");
 
-        private void Start()
+        private void Awake()
         {
             _actionScheduler = GetComponent<ActionScheduler>();
             _navMeshAgent = GetComponent<NavMeshAgent>();

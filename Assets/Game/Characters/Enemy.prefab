@@ -161,9 +161,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chaseDistance: 5
   suspicionTime: 3
-  waypointDwellTime: 3
   patrolPath: {fileID: 0}
   waypointTolerance: 2
+  waypointDwellTime: 3
+  patrolSpeedFraction: 0.2
 --- !u!114 &4843297905545545929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -176,3 +177,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc45b71acf3d1f74a99957a4e3948379, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &49933231816847969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7612512274498872645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ea9374b509b70f4bba37e4a2ca8cf00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueIdentifier: 5fa2a6e2-e57d-4d5a-a678-6b42154b15e5
