@@ -14,6 +14,7 @@ namespace RPG.SceneManagement
             if (Input.GetKeyDown(KeyCode.L))
             {
                 Load();
+                
             }
 
             if (Input.GetKeyDown(KeyCode.S))

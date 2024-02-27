@@ -33,6 +33,7 @@ namespace RPG.Saving
         public void Load(string saveFile)
         {
             RestoreState(LoadFile(saveFile));
+         
         }
 
         public void Delete(string saveFile)
