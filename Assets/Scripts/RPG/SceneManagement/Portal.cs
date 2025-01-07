@@ -21,7 +21,11 @@ namespace RPG.SceneManagement
         [Header("Fader")] [SerializeField] private float fadeOutTime = 0.5f;
         [SerializeField] private float fadeWaitTime = 1f;
         [SerializeField] private float fadeInTime = 0.5f;
- 
+
+        
+
+        
+
         private void OnTriggerEnter(Collider other)
         {
             if(!other.CompareTag("Player")) {return;}
@@ -36,29 +40,38 @@ namespace RPG.SceneManagement
                 Debug.LogError("Scene to Load not set yet");
                 yield break;
             }
-
             
             DontDestroyOnLoad(gameObject);
             
             Fader fader = FindObjectOfType<Fader>();
+            SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
             
-            print("empezo el fade out");
+            //remove control this player
+            PlayerController playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            playerController.enabled = false;
+            
             yield return fader.FadeOut(fadeOutTime);
-            print("termino  el fade out");
             
-            
+            savingWrapper.Save();
             
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            
+            //remove control other player
+            PlayerController newPlayerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            newPlayerController.enabled = false;
+            
+            savingWrapper.Load();
             
             var otherPortal = GetOtherPortal(); 
             UpdatePlayer(otherPortal);
             
+            savingWrapper.Save();
+            
             yield return new WaitForSeconds(fadeWaitTime);
-            
-            print("empezo el fade in");
-            yield return fader.FadeIn(fadeInTime);
-            print("termino  el fade in");
-            
+            fader.FadeIn(fadeInTime);
+
+            //restore control
+            newPlayerController.enabled = true;
             Destroy(gameObject);
         }
 
