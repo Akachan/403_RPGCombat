@@ -132,9 +132,10 @@ namespace RPG.Combat
             Hit();
         }
 
-        private bool GetIsInRange(Transform transform)
+        private bool GetIsInRange(Transform target)
         {
-            return Vector3.Distance(transform.position, _target.transform.position) <= _currentWeaponConfig.GetRange();
+            print($"My pos: transform.position: {transform.position}, Enemy pos: {target.position}, Distance: {Vector3.Distance(transform.position, _target.transform.position)}  ");
+            return Vector3.Distance(transform.position, target.position) <= _currentWeaponConfig.GetRange();
         }
 
         public bool CanAttack(GameObject combatTarget)

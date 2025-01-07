@@ -50,7 +50,7 @@ namespace RPG.SceneManagement
 
         public void Load()
         {
-            GetComponent<JsonSavingSystem>().Load(DefaultSaveFile);
+            StartCoroutine(GetComponent<JsonSavingSystem>().LoadLastScene(DefaultSaveFile));
         }
 
         public void Delete()
