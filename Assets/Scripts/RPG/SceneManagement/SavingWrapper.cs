@@ -8,15 +8,20 @@ namespace RPG.SceneManagement
 {
     public class SavingWrapper : MonoBehaviour
     {
-        private const string DefaultSaveFile = "save";
+        private const string DefaultSaveFile = "saving";
         private float _fadeInTime = 1f;
 
 
-        private IEnumerator Start()
+        private void Awake()
         {
+            StartCoroutine(LoadLastScene());
+        }
+
+        private IEnumerator LoadLastScene()
+        {
+            yield return GetComponent<JsonSavingSystem>().LoadLastScene(DefaultSaveFile);
             var fader = FindObjectOfType<Fader>();
             fader.FadeOutImmediate();
-            yield return GetComponent<SavingSystem>().LoadLastScene(DefaultSaveFile);
             yield return fader.FadeIn(_fadeInTime);
         }
 
@@ -25,23 +30,32 @@ namespace RPG.SceneManagement
             if (Input.GetKeyDown(KeyCode.L))
             {
                 Load();
-                
             }
 
             if (Input.GetKeyDown(KeyCode.S))
             {
                 Save();
             }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                Delete();
+            }
         }
 
         public void Save()
         {
-            GetComponent<SavingSystem>().Save(DefaultSaveFile);
+            GetComponent<JsonSavingSystem>().Save(DefaultSaveFile);
         }
 
         public void Load()
         {
-            GetComponent<SavingSystem>().Load(DefaultSaveFile);
+            GetComponent<JsonSavingSystem>().Load(DefaultSaveFile);
+        }
+
+        public void Delete()
+        {
+            GetComponent<JsonSavingSystem>().Delete(DefaultSaveFile);
         }
     }
 }

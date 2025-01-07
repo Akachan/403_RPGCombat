@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using RPG.Control;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
@@ -23,10 +24,7 @@ namespace RPG.SceneManagement
 
         
 
-        private void Awake()
-        {
-     
-        }
+        
 
         private void OnTriggerEnter(Collider other)
         {
@@ -46,13 +44,21 @@ namespace RPG.SceneManagement
             DontDestroyOnLoad(gameObject);
             
             Fader fader = FindObjectOfType<Fader>();
+            SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
+            
+            //remove control this player
+            PlayerController playerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            playerController.enabled = false;
             
             yield return fader.FadeOut(fadeOutTime);
             
-            SavingWrapper savingWrapper = FindObjectOfType<SavingWrapper>();
             savingWrapper.Save();
             
             yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            
+            //remove control other player
+            PlayerController newPlayerController = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+            newPlayerController.enabled = false;
             
             savingWrapper.Load();
             
@@ -62,8 +68,10 @@ namespace RPG.SceneManagement
             savingWrapper.Save();
             
             yield return new WaitForSeconds(fadeWaitTime);
-            yield return fader.FadeIn(fadeInTime);
+            fader.FadeIn(fadeInTime);
 
+            //restore control
+            newPlayerController.enabled = true;
             Destroy(gameObject);
         }
 

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
+using GameDevTV.Utils;
+using RPG.Attributes;
 using RPG.Combat;
 using RPG.Core;
 using RPG.Movement;
@@ -12,15 +14,18 @@ namespace RPG.Control
     {
         [SerializeField] private float chaseDistance = 5f;
         [SerializeField] private float suspicionTime = 10f;
+        [SerializeField] private float aggroCooldownTime = 5f;
         [SerializeField] private PatrolPath patrolPath;
         [SerializeField] private float waypointTolerance = 1f;      
         [SerializeField] private float waypointDwellTime = 3f;
         [SerializeField] [Range(0f,1f)] private float patrolSpeedFraction = 0.2f;
+        [SerializeField] private float shoutDistance = 3f;
         
-        private Vector3 _guardPosition;
+        private LazyValue<Vector3> _guardPosition;
         private int _currentWaypointIndex= 0;
         private float _timeSinceLastSawPlayer = Mathf.Infinity;
         private float _timeSinceArriveToWaypoint = Mathf.Infinity;
+        private float _timeSinceAggrevated = Mathf.Infinity;
         
         private ActionScheduler _actionScheduler;
         private GameObject _target;
@@ -35,11 +40,17 @@ namespace RPG.Control
             _fighter = GetComponent<Fighter>();
             _health = GetComponent<Health>();
             _mover = GetComponent<Mover>();
+            _guardPosition = new LazyValue<Vector3>(GetInitialPosition);
         }
 
         private void Start()
         {
-            _guardPosition = transform.position;
+            _guardPosition.ForceInit();
+        }
+
+        private Vector3 GetInitialPosition()
+        {
+            return transform.position;
         }
 
         private void Update()
@@ -47,7 +58,7 @@ namespace RPG.Control
             if(_health.IsDead){return;}
             
             
-            if (InAttackRange()  && _fighter.CanAttack(_target))
+            if (IsAggravated()  && _fighter.CanAttack(_target))
             {
                 AttackBehaviour();
             }
@@ -63,15 +74,20 @@ namespace RPG.Control
             UpdateTimers();
         }
 
+        public void Aggravate()
+        {
+            _timeSinceAggrevated = 0f;
+        }
         private void UpdateTimers()
         {
             _timeSinceLastSawPlayer += Time.deltaTime;
             _timeSinceArriveToWaypoint += Time.deltaTime;
+            _timeSinceAggrevated += Time.deltaTime;
         }
 
         private void PatrolBehaviour()
         {
-            var nextPosition = _guardPosition;
+            var nextPosition = _guardPosition.value;
 
             if (patrolPath != null)
             {
@@ -116,12 +132,28 @@ namespace RPG.Control
         {
             _timeSinceLastSawPlayer = 0f;
             _fighter.Attack(_target.gameObject);
+
+            AggrevateNearbyEnemies();
         }
 
-        private bool InAttackRange()
+        private void AggrevateNearbyEnemies()
+        {
+            RaycastHit[] hits = Physics.SphereCastAll(transform.position, shoutDistance, Vector3.up, 0);
+            foreach (var hit in hits)
+            {
+                AiController ai =hit.collider.GetComponent<AiController>();
+                if(ai == null) continue;
+                
+                ai.Aggravate();
+                
+            }
+        
+        }
+
+        private bool IsAggravated()
         {
           var distance = Vector3.Distance(_target.transform.position, transform.position);
-          return distance < chaseDistance;
+          return distance < chaseDistance || _timeSinceAggrevated < aggroCooldownTime;
         }
 
         private void OnDrawGizmosSelected()
